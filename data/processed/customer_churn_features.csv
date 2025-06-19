@@ -1,4 +1,4 @@
-Customer ID,Monetary,Invoice,Recency,Tenure,is_churned,Country_Belgium,Country_France,Country_Germany,Country_Netherlands,Country_Other,Country_Portugal,Country_Spain,Country_Sweden,Country_Switzerland,Country_United Kingdom
+Customer ID,Monetary,Frequency,Recency,Tenure,is_churned,Country_Belgium,Country_France,Country_Germany,Country_Netherlands,Country_Other,Country_Portugal,Country_Spain,Country_Sweden,Country_Switzerland,Country_United Kingdom
 12346,77556.46,12,235,635,1,False,False,False,False,False,False,False,False,False,True
 12347,3402.39,6,39,313,0,False,False,False,False,True,False,False,False,False,False
 12348,1709.3999999999999,4,158,347,0,False,False,False,False,True,False,False,False,False,False
