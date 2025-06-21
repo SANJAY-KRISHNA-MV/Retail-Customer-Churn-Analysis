@@ -1,86 +1,101 @@
-Phase 2: Data Acquisition & Understanding
-Phase Overview
-This phase focused on acquiring the raw transactional data, performing initial data loading, cleaning, and conducting an in-depth Exploratory Data Analysis (EDA). A crucial part of this phase was understanding the dataset's structure, identifying and handling data quality issues, and gaining preliminary insights that would inform subsequent feature engineering and modeling steps. The phase concluded with the definition of the churn observation window, a critical element for defining our target variable.
+# Phase 2: Data Acquisition & Understanding
 
-1. Data Acquisition
-The project utilizes the "Online Retail II" dataset, obtained from Kaggle (https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci). This dataset provides transactional data from a UK-based online retail store over a period of approximately two years (December 2009 to December 2011).
+## Phase Overview
 
-The raw online_retail_II.xlsx file was downloaded and placed into the data/raw/ directory of the project repository.
+This phase focused on acquiring the raw transactional data, performing initial data loading and cleaning, and conducting in-depth Exploratory Data Analysis (EDA). The goal was to understand the dataset’s structure, handle data quality issues, and extract preliminary insights that would inform future feature engineering and modeling. The phase concluded with a defined churn observation window, which is essential for labeling the target variable.
 
-2. Initial Data Loading and Inspection
-The first step in the 01_data_acquisition_and_eda.ipynb notebook involved loading the .xlsx file into a Pandas DataFrame. Initial inspection was performed using:
+---
 
-df.info(): To check data types, non-null counts, and memory usage.
+## 1. Data Acquisition
 
-df.head(): To view the first few rows and understand the data structure.
+The project uses the **Online Retail II** dataset from Kaggle:  
+[https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci](https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci)
 
-df.describe(): To obtain descriptive statistics for numerical columns.
+- Source: UK-based online retail store  
+- Time Period: December 2009 – December 2011  
+- File: `online_retail_II.xlsx`  
+- Location: Placed in the `data/raw/` directory of the project repository
 
-df.isnull().sum(): To identify the count of missing values per column.
+---
 
-df['Country'].value_counts(): To understand the distribution of geographical data.
+## 2. Initial Data Loading and Inspection
 
-Key observations from initial inspection:
+The initial steps in `eda.ipynb` involved loading the Excel file into a Pandas DataFrame. Key inspection commands used:
 
-Significant missing values in Customer ID, which are crucial for customer-level analysis.
+- `df.info()`: Check data types, null values, memory usage  
+- `df.head()`: Preview the first few rows  
+- `df.describe()`: Summary statistics of numerical columns  
+- `df.isnull().sum()`: Count of missing values per column  
+- `df['Country'].value_counts()`: Distribution of customer countries
 
-Missing values in Description.
+### Key Observations:
 
-Presence of non-positive Quantity (returns) and Price values.
+- Significant missing values in **CustomerID**
+- Missing values in **Description**
+- Non-positive **Quantity** and **Price** values (e.g., returns)
+- `Invoice` with prefix `'C'` indicate **cancelled orders**
+- `InvoiceDate` required conversion to datetime format
+- Column `Price` was actually **unit price**, not `UnitPrice`
 
-InvoiceNo contains entries prefixed with 'C', indicating cancelled orders.
+---
 
-InvoiceDate needed conversion to datetime objects for time-series analysis.
+## 3. Basic Data Cleaning
 
-The actual unit price column was named Price, not UnitPrice.
+To prepare the dataset for modeling:
 
-3. Basic Data Cleaning
-To ensure data quality and prepare the dataset for reliable feature engineering, the following cleaning steps were performed:
+- **Dropped rows** with missing `CustomerID`
+- Converted `CustomerID` to integer, `InvoiceDate` to datetime
+- Filled missing `Description` values with `'Unknown'`
+- Removed rows where `Quantity` or `Price` ≤ 0
+- Removed cancelled transactions (`Invoice` starting with `'C'`)
+- Created new column:  
+  `TotalPrice = Quantity * Price`
+- Removed **duplicate rows**
+- Saved cleaned data to:  
+  `data/processed/online_retail_cleaned.csv`
 
-Missing Customer IDs: Rows with null Customer ID were dropped, as these transactions cannot be attributed to a specific customer for churn analysis.
+---
 
-Data Type Conversion: Customer ID was converted to an integer type. InvoiceDate was converted to a proper datetime format.
+## 4. In-depth Exploratory Data Analysis (EDA)
 
-Missing Descriptions: Missing values in the Description column were filled with 'Unknown'.
+### Time Range Analysis
 
-Invalid Quantities/Prices: Rows where Quantity or Price were less than or equal to zero were removed. This filters out returns and invalid pricing entries, focusing on actual purchase behavior for churn analysis.
+- **Date Range**: `2009-12-01` to `2011-12-09`  
+- Visualized:
+  - Monthly unique transactions
+  - Total sales trends and seasonality
 
-Cancelled Orders: Transactions with InvoiceNo starting with 'C' were identified and removed, as they represent cancelled orders rather than genuine purchases.
+### Distribution Analysis
 
-TotalPrice Calculation: A new column TotalPrice was calculated as Quantity * Price to represent the total cost of each item line.
+- Histograms for `Quantity`, `Price`, `TotalPrice`
+- Distributions were **right-skewed**
+- **Logarithmic scales** used for clearer visualizations
 
-Duplicate Rows: Exact duplicate rows were identified and removed.
+### Customer & Country Insights
 
-The cleaned dataset was then saved as data/processed/online_retail_cleaned.csv for use in subsequent phases.
+- Total **unique customers** calculated
+- Top 10 countries by:
+  - Number of transactions
+  - Total sales  
+- **UK** dominates the dataset, as expected
 
-4. In-depth Exploratory Data Analysis (EDA)
-After the initial cleaning, a deeper dive into the data characteristics was performed:
+---
 
-Time Range Analysis:
+## 5. Churn Definition Strategy
 
-Determined the minimum and maximum InvoiceDate to understand the full temporal span of the dataset (approximately 2009-12-01 to 2011-12-09).
+Since no churn label was provided, a custom churn definition was established:
 
-Visualized monthly unique transactions and total sales over time to observe trends and seasonality.
+- **Analysis End Date**: `2011-12-09` (latest InvoiceDate)
+- **Churn Window**: 3 months  
+- **Observation End Date**:  
+  `analysis_end_date - 3 months`
 
-Distribution Analysis:
+### Churn Labeling
 
-Histograms were generated for Quantity, Price, and TotalPrice (per item). These revealed highly skewed distributions, typical for retail transaction data, with most values concentrated at the lower end. Logarithmic scales were used for better visualization of these distributions.
+- **Churned (`is_churned = 1`)**:  
+  Last purchase before `observation_end_date`  
+  **AND** no purchase during the churn window
 
-Customer & Country Analysis:
-
-Calculated the total number of unique customers.
-
-Analyzed the top 10 countries by the number of transactions and total sales. This confirmed that the United Kingdom accounts for the vast majority of transactions and sales, which is expected for this dataset.
-
-5. Churn Definition Strategy
-A critical output of this phase was establishing the definition of "churn" for this project, given the absence of an explicit churn label in the dataset.
-
-Analysis End Date: The latest transaction date in the dataset (2011-12-09) was set as the analysis_end_date.
-
-Churn Window Duration: A 3-month duration was chosen for the churn observation window. This is a common period in retail for defining inactivity that leads to churn.
-
-Observation End Date: This was defined as analysis_end_date - 3 months. All historical features (like RFM) will be calculated based on customer activity up to this observation_end_date.
-
-Churn Labeling: A customer will be considered is_churned = 1 if their last purchase occurred before the observation_end_date AND they made no purchases during the subsequent 3-month churn window (from observation_end_date to analysis_end_date). Conversely, customers who had activity before the observation_end_date and did make a purchase within the churn window will be labeled is_churned = 0 (non-churned).
-
-This completed Phase 2, providing a robust, cleaned dataset and a clear strategy for feature engineering and churn labeling.
+- **Not Churned (`is_churned = 0`)**:  
+  Had activity before `observation_end_date`  
+  **AND** made at least one purchase during the churn window

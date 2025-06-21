@@ -1,73 +1,106 @@
-Project Planning & Setup
-Phase Overview
-This document outlines the initial planning and setup phase for the "Retail Customer Churn Analysis" project. The primary goal of this phase was to define the project scope, break down the project into manageable tasks, select initial tools and libraries, and establish a clear GitHub repository structure. This foundational work ensures a structured and efficient development process.
+# Project Planning & Setup
 
-1. Project Objectives & Scope Definition
-The core objective of this project is to build a machine learning model capable of predicting customer churn in a retail business using a real-world transactional dataset. Beyond prediction, the project aims to identify the key factors influencing churn, enabling the development of targeted customer retention strategies.
+## Phase Overview
 
-The project is structured to showcase skills critical for a Data Scientist role, including:
+This document outlines the initial planning and setup phase for the **"Retail Customer Churn Analysis"** project. The primary goal of this phase was to define the project scope, break down the project into manageable tasks, select initial tools and libraries, and establish a clear GitHub repository structure. This foundational work ensures a structured and efficient development process.
 
-Data Acquisition & Preparation: Working with a real-world, publicly available dataset (Online Retail II), demonstrating skills in loading, inspecting, and initially cleaning raw data.
+---
 
-Data Manipulation & Feature Engineering: Creating meaningful features like RFM (Recency, Frequency, Monetary) and deriving customer-level insights (e.g., customer tenure) from raw transactional data.
+## 1. Project Objectives & Scope Definition
 
-Statistical Modeling & ML Algorithms: Building and evaluating classification models.
+The core objective of this project is to build a **machine learning model** capable of predicting customer churn in a retail business using a real-world transactional dataset. Beyond prediction, the project aims to identify the key factors influencing churn, enabling the development of targeted customer retention strategies.
 
-Model Evaluation: Using appropriate metrics (accuracy, precision, recall, F1-score, ROC-AUC).
+The project is structured to showcase skills critical for a **Data Scientist** role, including:
 
-Codified Algorithms: Developing clean, modular, and well-commented Python code.
+- **Data Acquisition & Preparation**:  
+  Working with a real-world, publicly available dataset (Online Retail II), demonstrating skills in loading, inspecting, and initially cleaning raw data.
 
-Visualization & Communication: Creating interactive dashboards and deriving actionable business insights.
+- **Data Manipulation & Feature Engineering**:  
+  Creating meaningful features like RFM (Recency, Frequency, Monetary) and deriving customer-level insights (e.g., customer tenure) from raw transactional data.
 
-Business Understanding & Problem Solving: Translating analytical findings into practical business recommendations within a retail context.
+- **Statistical Modeling & ML Algorithms**:  
+  Building and evaluating classification models.
 
-Project Breakdown into Manageable Phases:
+- **Model Evaluation**:  
+  Using appropriate metrics (accuracy, precision, recall, F1-score, ROC-AUC).
+
+- **Codified Algorithms**:  
+  Developing clean, modular, and well-commented Python code.
+
+- **Visualization & Communication**:  
+  Creating interactive dashboards and deriving actionable business insights.
+
+- **Business Understanding & Problem Solving**:  
+  Translating analytical findings into practical business recommendations within a retail context.
+
+---
+
+## Project Breakdown into Manageable Phases
+
 The project has been segmented into the following key phases:
 
-Project Planning & Setup: (Current Phase) Defining scope, setting up environment, initial tool selection.
+1. **Project Planning & Setup** *(Current Phase)*:  
+   Defining scope, setting up environment, initial tool selection.
 
-Data Acquisition & Understanding: Acquiring the specified Kaggle dataset, performing initial Exploratory Data Analysis (EDA), and basic data cleaning.
+2. **Data Acquisition & Understanding**:  
+   Acquiring the specified Kaggle dataset, performing initial Exploratory Data Analysis (EDA), and basic data cleaning.
 
-Data Preprocessing & Feature Engineering: Cleaning data, transforming features, and creating new predictive variables (e.g., RFM, customer tenure) from the transactional data.
+3. **Data Preprocessing & Feature Engineering**:  
+   Cleaning data, transforming features, and creating new predictive variables (e.g., RFM, customer tenure) from the transactional data.
 
-Modeling & Evaluation: Selecting, training, optimizing, and evaluating various machine learning churn prediction models.
+4. **Modeling & Evaluation**:  
+   Selecting, training, optimizing, and evaluating various machine learning churn prediction models.
 
-Visualization & Communication: Developing interactive dashboards and formulating actionable business recommendations.
+5. **Visualization & Communication**:  
+   Developing interactive dashboards and formulating actionable business recommendations.
 
-Documentation & Presentation: Creating comprehensive project documentation, well-commented code, and a final project report/presentation.
+6. **Documentation & Presentation**:  
+   Creating comprehensive project documentation, well-commented code, and a final project report/presentation.
 
-2. Data Source and Initial Considerations
-Instead of generating hypothetical data, this project utilizes the "Online Retail II" dataset from Kaggle (https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci). This dataset provides transactional data for a UK-based online retail store.
+---
 
-Key aspects and adjustments due to this data source:
+## 2. Data Source and Initial Considerations
 
-Dataset Content: The dataset primarily contains InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, and Country.
+Instead of generating hypothetical data, this project utilizes the **"Online Retail II" dataset** from Kaggle:  
+[https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci](https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci)
 
-Missing Demographic Data: It lacks explicit demographic information (age, gender, etc.). Country will serve as the primary geographical demographic feature. This highlights the need to work with available data and identify limitations.
+### Key aspects and adjustments due to this data source:
 
-Churn Definition: Since there's no explicit churn flag, churn will be defined based on customer inactivity (Recency) over a specific period.
+- **Dataset Content**:  
+  Includes fields like `InvoiceNo`, `StockCode`, `Description`, `Quantity`, `InvoiceDate`, `UnitPrice`, `CustomerID`, and `Country`.
 
-Customer Registration Date: This will be engineered by identifying the earliest transaction date for each unique customer.
+- **Missing Demographic Data**:  
+  No direct demographic information (age, gender, etc.). `Country` will serve as the primary geographical demographic feature.
 
-Focus on Feature Engineering: The absence of direct demographic data means a stronger emphasis will be placed on extracting rich behavioral features from the transactional history (e.g., Recency, Frequency, Monetary value).
+- **Churn Definition**:  
+  Churn is defined based on **customer inactivity** (Recency) over a specific period.
 
-3. Initial Tool & Library Choices
-The following core tools and Python libraries have been selected to support the project's development, balancing industry standards with ease of use for a portfolio project:
+- **Customer Registration Date**:  
+  Will be engineered using the earliest transaction date per customer.
 
-Python: The primary programming language for all data science tasks.
+- **Focus on Feature Engineering**:  
+  Due to the lack of direct demographics, more focus will be on **behavioral features** from the transactional history (e.g., RFM).
 
-pandas: Essential for data manipulation, cleaning, and analysis, especially for handling Excel files and large DataFrames.
+---
 
-numpy: For fundamental numerical operations.
+## 3. Initial Tool & Library Choices
 
-scikit-learn: The go-to library for machine learning model development, including classification algorithms (e.g., Logistic Regression, Random Forest, Gradient Boosting), model selection utilities, and evaluation metrics.
+The following tools and libraries were selected to support project development, balancing industry standards and ease of use:
 
-matplotlib.pyplot & seaborn: For static data visualizations during EDA.
+- **Python**: Primary programming language for all tasks.
 
-plotly / dash / streamlit: Under consideration for creating interactive dashboards. A Python-based solution is preferred to keep the project cohesive within the GitHub repository, with Streamlit or Dash as leading candidates.
+- **pandas**: For data manipulation, cleaning, and analysis (including Excel handling).
 
-joblib / pickle: For saving and loading the trained machine learning model.
+- **numpy**: Fundamental library for numerical operations.
 
-imblearn (imbalanced-learn): (Potential future use) For handling class imbalance if observed in the churn data.
+- **scikit-learn**: For building and evaluating ML models:
+  - Classification algorithms: Logistic Regression, Random Forest, Gradient Boosting
+  - Model selection tools and evaluation metrics
 
-openpyxl: (Implicitly used by pandas) For reading .xlsx files.
+- **matplotlib.pyplot** & **seaborn**: For static visualizations during EDA.
+
+- **plotly / dash / streamlit**:  
+  Under consideration for interactive dashboards.  
+  *Preferred: Streamlit or Dash for seamless Python integration.*
+
+- **joblib / pickle**: For saving/loading trained models.

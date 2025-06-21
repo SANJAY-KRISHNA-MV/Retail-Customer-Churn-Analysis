@@ -1,91 +1,129 @@
-Phase 4: Modeling & Evaluation
-Phase Overview
-This phase focused on building, training, and rigorously evaluating machine learning models to predict customer churn. It encompassed preparing the feature-engineered data, splitting it into training and testing sets, training multiple classification algorithms, assessing their performance using a range of metrics, performing hyperparameter tuning on the best candidate model (Gradient Boosting), and identifying key features influencing churn.
+# Phase 4: Modeling & Evaluation
 
-1. Data Preparation for Modeling
-The customer_churn_features.csv dataset, generated in Phase 3, was loaded. This dataset contains customer-level features (RFM, Tenure, encoded Country) and the binary is_churned target variable.
+## Phase Overview
 
-Feature-Target Split: The dataset was divided into features (X) and the target variable (y). The Customer ID column was excluded from features as it is an identifier, not a predictive attribute.
+This phase focused on building, training, and evaluating machine learning models to predict customer churn. It included:
 
-Train-Test Split: The data was split into training (75%) and testing (25%) sets. To ensure that the proportion of churned and non-churned customers was maintained in both sets, stratify=y was used during the train_test_split. A random_state was set for reproducibility.
+- Preparing the feature-engineered dataset
+- Splitting data into training and testing sets
+- Training multiple classification models
+- Evaluating model performance using various metrics
+- Hyperparameter tuning of the best model (Gradient Boosting)
+- Analyzing feature importance
+- Saving the final model
 
-2. Model Selection and Initial Training
-Three distinct machine learning classification algorithms were chosen for initial evaluation:
+---
 
-Logistic Regression: A linear model, serving as a robust baseline due to its interpretability and simplicity. A StandardScaler was applied within a Pipeline for this model, as linear models are sensitive to feature scaling.
+## 1. Data Preparation for Modeling
 
-Random Forest Classifier: An ensemble tree-based model known for its high performance, robustness to outliers, and ability to capture non-linear relationships. Tree-based models generally do not require feature scaling.
+- **Dataset Used**: `customer_churn_features.csv` (from Phase 3)
+- **Target Variable**: `is_churned`
+- **Features**: RFM, Tenure, one-hot encoded Country
+- **Excluded**: `CustomerID` (identifier, not predictive)
 
-Gradient Boosting Classifier: Another powerful ensemble tree-based model, often delivering state-of-the-art performance by sequentially building trees and correcting errors of preceding trees.
+### Splitting Data
 
-Each model was trained on the X_train and y_train sets.
+- Train-Test Split:  
+  - 75% training, 25% testing  
+  - Stratified on `y` to preserve churn ratio  
+  - `random_state` set for reproducibility
 
-3. Model Evaluation Metrics
-After initial training, each model's performance was evaluated on the X_test set using several key metrics relevant to churn prediction:
+---
 
-Accuracy: Overall proportion of correct predictions.
+## 2. Model Selection and Initial Training
 
-Precision: The proportion of correctly predicted churners out of all instances predicted as churners. Important for minimizing false positives.
+Three models were selected:
 
-Recall (Sensitivity): The proportion of correctly predicted churners out of all actual churners. Crucial for identifying as many true churners as possible.
+1. **Logistic Regression**  
+   - Baseline model  
+   - Used with `StandardScaler` in a `Pipeline`  
+   - Sensitive to feature scaling
 
-F1-Score: The harmonic mean of Precision and Recall, providing a balanced measure, especially useful for imbalanced datasets.
+2. **Random Forest Classifier**  
+   - Tree-based ensemble model  
+   - Handles non-linear relationships  
+   - No scaling needed
 
-ROC-AUC (Receiver Operating Characteristic - Area Under the Curve): Measures the model's ability to distinguish between churned and non-churned customers across all possible classification thresholds. A higher value indicates better discrimination. ROC curves were plotted for visual assessment.
+3. **Gradient Boosting Classifier**  
+   - Sequential ensemble model  
+   - Known for high accuracy  
+   - No scaling needed
 
-Confusion Matrix: Provides a detailed breakdown of true positives, true negatives, false positives, and false negatives.
+Each model was trained on the `X_train` and `y_train` sets.
 
-Initial ROC-AUC Scores (Out-of-the-box):
+---
 
-Logistic Regression: 0.7949
+## 3. Model Evaluation Metrics
 
-Random Forest: 0.7818
+Each model was evaluated on the `X_test` set using:
 
-Gradient Boosting: 0.8120
+- **Accuracy**: Overall correctness
+- **Precision**: Correctly predicted churners / Total predicted churners
+- **Recall**: Correctly predicted churners / Total actual churners
+- **F1-Score**: Harmonic mean of Precision and Recall
+- **ROC-AUC**: Discrimination ability across all thresholds
+- **Confusion Matrix**: Breakdown of TP, FP, FN, TN
 
-Based on these initial runs, the Gradient Boosting Classifier demonstrated the highest ROC-AUC score, indicating strong discriminatory power even before hyperparameter tuning. This led to the decision to select Gradient Boosting as the primary model for further optimization.
+### Initial ROC-AUC Scores:
 
-For this project, Recall and ROC-AUC were prioritized to ensure the model effectively identifies a high proportion of actual churners and provides excellent overall discriminative ability, which is vital for proactive retention strategies.
+- Logistic Regression: **0.7949**
+- Random Forest: **0.7818**
+- Gradient Boosting: **0.8120**
 
-4. Hyperparameter Tuning (Gradient Boosting)
-Hyperparameter tuning was performed on the Gradient Boosting Classifier using GridSearchCV. The goal was to find the optimal combination of parameters (n_estimators, learning_rate, max_depth, subsample) that maximize the roc_auc score through cross-validation on the training set.
+> **Gradient Boosting** had the best ROC-AUC and was selected for tuning.
 
-The GridSearchCV successfully identified the optimal parameters for the Gradient Boosting model.
+### Priority Metrics:
 
-Best Tuned Gradient Boosting Model Performance on Test Set:
+- **Recall** (to capture actual churners)
+- **ROC-AUC** (for overall discriminative performance)
 
-Accuracy: 0.7517
+---
 
-Precision: 0.7536
+## 4. Hyperparameter Tuning (Gradient Boosting)
 
-Recall: 0.8342
+Used `GridSearchCV` to tune:
 
-F1-Score: 0.7919
+- `n_estimators`
+- `learning_rate`
+- `max_depth`
+- `subsample`
 
-ROC-AUC: 0.8121
+### Best Tuned Model Performance on Test Set:
 
-Confusion Matrix:
+- **Accuracy**: `0.7517`
+- **Precision**: `0.7536`
+- **Recall**: `0.8342`
+- **F1-Score**: `0.7919`
+- **ROC-AUC**: `0.8121`
 
-True Negatives (Correctly predicted non-churners): 369
+### Confusion Matrix:
 
-False Positives (Predicted churners, but are non-churners): 204
+|                | Predicted Non-Churn | Predicted Churn |
+|----------------|---------------------|------------------|
+| **Actual Non-Churn** | 369 (TN)             | 204 (FP)         |
+| **Actual Churn**     | 124 (FN)             | 624 (TP)         |
 
-False Negatives (Predicted non-churners, but are actual churners): 124
+> Strong recall and ROC-AUC confirm the model is effective at identifying churners.
 
-True Positives (Correctly predicted churners): 624
+---
 
-These results indicate that the tuned Gradient Boosting model performs well in identifying actual churners (high recall) while maintaining good precision and overall discriminative power (ROC-AUC).
+## 5. Feature Importance Analysis
 
-5. Feature Importance Analysis
-The feature_importances_ attribute of the best-tuned Gradient Boosting model was utilized to understand the relative contribution of each feature to the model's predictions.
+Used `feature_importances_` from the tuned Gradient Boosting model.
 
-Features were ranked by importance, providing insights into which aspects of customer behavior are most strongly associated with churn.
+- Features ranked by importance
+- Top 15 visualized in a bar plot
 
-A bar plot visualized the top 15 most important features.
+> Example Insight:  
+> If **Recency** is highly important, customers who haven’t purchased recently are more likely to churn.
 
-This analysis is crucial for deriving actionable business insights and translating model findings into practical retention strategies. For instance, high importance of Recency would suggest targeting customers who haven't purchased recently.
+This helps translate model findings into actionable business strategies.
 
-6. Model Saving
-The best-performing model, the Tuned Gradient Boosting Classifier, was saved using joblib to the models/ directory as best_churn_model.joblib. This serialized model can be easily loaded for future predictions or deployment.
+---
 
-This concludes Phase 4, resulting in a robust, evaluated churn prediction model and key insights into churn drivers.
+## 6. Model Saving
+
+The final tuned Gradient Boosting model was saved as:
+
+- Saved using `joblib`
+- Can be reloaded for inference or deployment
